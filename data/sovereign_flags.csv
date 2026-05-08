@@ -1,0 +1,198 @@
+iso2,name,vex_category
+af,Afghanistan,solid_emblem
+al,Albania,solid_emblem
+dz,Algeria,star_crescent
+ad,Andorra,heraldic
+ao,Angola,communist_red
+ag,Antigua and Barbuda,unique
+ar,Argentina,latin_charge
+am,Armenia,horizontal_tricolor
+au,Australia,british_ensign
+at,Austria,horizontal_tricolor
+az,Azerbaijan,star_crescent
+bs,Bahamas,unique
+bh,Bahrain,unique
+bd,Bangladesh,solid_emblem
+bb,Barbados,unique
+by,Belarus,communist_red
+be,Belgium,vertical_tricolor
+bz,Belize,heraldic
+bj,Benin,pan_african
+bt,Bhutan,unique
+bo,Bolivia,latin_charge
+ba,Bosnia and Herzegovina,unique
+bw,Botswana,unique
+br,Brazil,unique
+bn,Brunei,heraldic
+bg,Bulgaria,pan_slavic
+bf,Burkina Faso,pan_african
+bi,Burundi,saltire
+kh,Cambodia,solid_emblem
+cm,Cameroon,pan_african
+ca,Canada,solid_emblem
+cv,Cabo Verde,unique
+cf,Central African Republic,pan_african
+td,Chad,vertical_tricolor
+cl,Chile,stars_stripes
+cn,China,communist_red
+co,Colombia,horizontal_tricolor
+km,Comoros,star_crescent
+cg,Republic of the Congo,pan_african
+cd,Democratic Republic of the Congo,unique
+cr,Costa Rica,horizontal_tricolor
+ci,Cote d'Ivoire,vertical_tricolor
+hr,Croatia,pan_slavic
+cu,Cuba,stars_stripes
+cy,Cyprus,solid_emblem
+cz,Czech Republic,pan_slavic
+dk,Denmark,nordic_cross
+dj,Djibouti,unique
+dm,Dominica,unique
+do,Dominican Republic,unique
+ec,Ecuador,latin_charge
+eg,Egypt,pan_arab
+sv,El Salvador,latin_charge
+gq,Equatorial Guinea,pan_african
+er,Eritrea,unique
+ee,Estonia,horizontal_tricolor
+sz,Eswatini,heraldic
+et,Ethiopia,pan_african
+fj,Fiji,british_ensign
+fi,Finland,nordic_cross
+fr,France,vertical_tricolor
+ga,Gabon,horizontal_tricolor
+gm,Gambia,horizontal_tricolor
+ge,Georgia,unique
+de,Germany,horizontal_tricolor
+gh,Ghana,pan_african
+gr,Greece,stars_stripes
+gd,Grenada,unique
+gt,Guatemala,latin_charge
+gn,Guinea,pan_african
+gw,Guinea-Bissau,pan_african
+gy,Guyana,unique
+ht,Haiti,latin_charge
+hn,Honduras,latin_charge
+hu,Hungary,horizontal_tricolor
+is,Iceland,nordic_cross
+in,India,horizontal_tricolor
+id,Indonesia,horizontal_tricolor
+ir,Iran,horizontal_tricolor
+iq,Iraq,pan_arab
+ie,Ireland,vertical_tricolor
+il,Israel,unique
+it,Italy,vertical_tricolor
+jm,Jamaica,saltire
+jp,Japan,solid_emblem
+jo,Jordan,pan_arab
+kz,Kazakhstan,solid_emblem
+ke,Kenya,pan_african
+ki,Kiribati,unique
+kp,North Korea,communist_red
+kr,South Korea,solid_emblem
+kw,Kuwait,pan_arab
+kg,Kyrgyzstan,solid_emblem
+la,Laos,solid_emblem
+lv,Latvia,horizontal_tricolor
+lb,Lebanon,solid_emblem
+ls,Lesotho,unique
+lr,Liberia,stars_stripes
+ly,Libya,star_crescent
+li,Liechtenstein,heraldic
+lt,Lithuania,horizontal_tricolor
+lu,Luxembourg,horizontal_tricolor
+mg,Madagascar,unique
+mw,Malawi,pan_african
+my,Malaysia,stars_stripes
+mv,Maldives,star_crescent
+ml,Mali,pan_african
+mt,Malta,heraldic
+mh,Marshall Islands,unique
+mr,Mauritania,star_crescent
+mu,Mauritius,horizontal_tricolor
+mx,Mexico,vertical_tricolor
+fm,Micronesia,solid_emblem
+md,Moldova,vertical_tricolor
+mc,Monaco,horizontal_tricolor
+mn,Mongolia,communist_red
+me,Montenegro,heraldic
+ma,Morocco,solid_emblem
+mz,Mozambique,pan_african
+mm,Myanmar,horizontal_tricolor
+na,Namibia,unique
+nr,Nauru,unique
+np,Nepal,unique
+nl,Netherlands,horizontal_tricolor
+nz,New Zealand,british_ensign
+ni,Nicaragua,latin_charge
+ne,Niger,horizontal_tricolor
+ng,Nigeria,vertical_tricolor
+mk,North Macedonia,solid_emblem
+no,Norway,nordic_cross
+om,Oman,pan_arab
+pk,Pakistan,star_crescent
+pw,Palau,solid_emblem
+ps,Palestine,pan_arab
+pa,Panama,unique
+pg,Papua New Guinea,unique
+py,Paraguay,latin_charge
+pe,Peru,vertical_tricolor
+ph,Philippines,unique
+pl,Poland,pan_slavic
+pt,Portugal,heraldic
+qa,Qatar,unique
+ro,Romania,vertical_tricolor
+ru,Russia,pan_slavic
+rw,Rwanda,horizontal_tricolor
+kn,Saint Kitts and Nevis,unique
+lc,Saint Lucia,unique
+vc,Saint Vincent and the Grenadines,vertical_tricolor
+ws,Samoa,stars_stripes
+sm,San Marino,heraldic
+st,Sao Tome and Principe,pan_african
+sa,Saudi Arabia,solid_emblem
+sn,Senegal,pan_african
+rs,Serbia,pan_slavic
+sc,Seychelles,unique
+sl,Sierra Leone,horizontal_tricolor
+sg,Singapore,star_crescent
+sk,Slovakia,pan_slavic
+si,Slovenia,pan_slavic
+sb,Solomon Islands,unique
+so,Somalia,solid_emblem
+za,South Africa,unique
+ss,South Sudan,pan_african
+es,Spain,heraldic
+lk,Sri Lanka,heraldic
+sd,Sudan,pan_arab
+sr,Suriname,horizontal_tricolor
+se,Sweden,nordic_cross
+ch,Switzerland,unique
+sy,Syria,pan_arab
+tj,Tajikistan,horizontal_tricolor
+tz,Tanzania,pan_african
+th,Thailand,horizontal_tricolor
+tl,Timor-Leste,unique
+tg,Togo,pan_african
+to,Tonga,unique
+tt,Trinidad and Tobago,unique
+tn,Tunisia,star_crescent
+tr,Turkey,star_crescent
+tm,Turkmenistan,star_crescent
+tv,Tuvalu,british_ensign
+ug,Uganda,pan_african
+ua,Ukraine,horizontal_tricolor
+ae,United Arab Emirates,pan_arab
+gb,United Kingdom,british_ensign
+us,United States,stars_stripes
+uy,Uruguay,stars_stripes
+uz,Uzbekistan,star_crescent
+vu,Vanuatu,unique
+va,Vatican City,heraldic
+ve,Venezuela,latin_charge
+vn,Vietnam,communist_red
+ye,Yemen,pan_arab
+zm,Zambia,unique
+zw,Zimbabwe,pan_african
+tw,Taiwan,stars_stripes
+xk,Kosovo,unique
