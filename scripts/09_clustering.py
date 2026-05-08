@@ -55,18 +55,18 @@ def setup_axes(ax, title: str = "", subtitle: str = ""):
     for spine in ax.spines.values():
         spine.set_visible(False)
     ax.tick_params(colors=SUBTLE, length=0)
-    if title:
-        ax.set_title(title, color=TEXT, fontsize=15, fontweight="medium",
-                     loc="left", pad=12)
-    if subtitle:
-        ax.text(1.0, 1.02, subtitle, transform=ax.transAxes,
-                fontsize=10, color=SUBTLE, ha="right", va="bottom")
 
 
 def figure(figsize, title, subtitle):
     fig, ax = plt.subplots(figsize=figsize)
     fig.patch.set_facecolor(BG)
-    setup_axes(ax, title, subtitle)
+    setup_axes(ax)
+    # Place title + subtitle as figure-level text, stacked, top-left aligned.
+    fig.suptitle(title, fontsize=18, fontweight="medium", color=TEXT,
+                 x=0.04, y=0.97, ha="left")
+    if subtitle:
+        fig.text(0.04, 0.91, subtitle, fontsize=10.5, color=SUBTLE,
+                 ha="left")
     return fig, ax
 
 
@@ -110,7 +110,7 @@ def fig_kmeans_confusion(X: np.ndarray, meta: pd.DataFrame):
     cb = fig.colorbar(im, ax=ax, fraction=0.04, pad=0.02)
     cb.outline.set_visible(False)
     cb.ax.tick_params(colors=SUBTLE, length=0)
-    plt.tight_layout()
+    plt.subplots_adjust(left=0.18, right=0.95, top=0.86, bottom=0.08)
     fig.savefig(OUT_ANALYSIS / "kmeans_confusion.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -148,7 +148,7 @@ def fig_knn_purity(Xn: np.ndarray, meta: pd.DataFrame, k: int = 5):
     ax.axvline(purity.mean(), color=SUBTLE, linewidth=1.0, alpha=0.6,
                linestyle="--", label="global mean")
     ax.legend(frameon=False, fontsize=9.5, labelcolor=TEXT, loc="lower right")
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "knn_purity.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -181,7 +181,7 @@ def fig_distance_histograms(Xn: np.ndarray, meta: pd.DataFrame):
     ax.set_xlabel("cosine distance", color=SUBTLE, fontsize=10.5)
     ax.set_ylabel("density", color=SUBTLE, fontsize=10.5)
     ax.legend(frameon=False, fontsize=10, labelcolor=TEXT)
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "distance_histograms.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -220,7 +220,7 @@ def fig_ari_vs_k(X: np.ndarray, meta: pd.DataFrame):
     ax.set_xlabel("k", color=SUBTLE, fontsize=10.5)
     ax.set_ylabel("score", color=SUBTLE, fontsize=10.5)
     ax.legend(frameon=False, fontsize=10, labelcolor=TEXT, loc="lower right")
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "ari_nmi_vs_k.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -259,7 +259,7 @@ def fig_mi_metadata(X: np.ndarray, meta: pd.DataFrame):
     ax.set_xlabel("k", color=SUBTLE, fontsize=10.5)
     ax.set_ylabel("NMI", color=SUBTLE, fontsize=10.5)
     ax.legend(frameon=False, fontsize=10, labelcolor=TEXT, loc="upper left")
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "mi_metadata.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -345,7 +345,7 @@ def fig_linear_probe(X: np.ndarray, meta: pd.DataFrame):
         ax.text(bar.get_x() + bar.get_width() / 2, m + 0.01, f"{m:.2f}",
                 ha="center", color=TEXT, fontsize=10, fontweight="medium")
     ax.legend(frameon=False, fontsize=10, labelcolor=TEXT, loc="upper right")
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "linear_probe.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -380,7 +380,7 @@ def fig_knn_purity_vs_dim(Xn: np.ndarray, meta: pd.DataFrame, k: int = 5):
     for d, p in zip(dims, purities):
         ax.annotate(f"{p:.2f}", (d, p), textcoords="offset points",
                     xytext=(0, 8), ha="center", color=TEXT, fontsize=9)
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "knn_purity_vs_dim.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -403,7 +403,7 @@ def fig_dendrogram(Xn: np.ndarray, meta: pd.DataFrame):
     for ticklabel, leaf_idx in zip(ax.get_xticklabels(), leaves):
         ticklabel.set_color(CATEGORY_COLORS.get(cats[leaf_idx], "#999999"))
     ax.set_ylabel("Ward distance", color=SUBTLE, fontsize=10.5)
-    plt.tight_layout()
+    plt.tight_layout(rect=[0.0, 0.0, 1.0, 0.88])
     fig.savefig(OUT_ANALYSIS / "dendrogram.png", dpi=200, facecolor=BG)
     plt.close(fig)
 

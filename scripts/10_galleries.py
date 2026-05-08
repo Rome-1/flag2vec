@@ -127,7 +127,7 @@ def fig_distant_pairs(Xn: np.ndarray, meta: pd.DataFrame, top: int = 10):
         if len(pairs) >= top:
             break
 
-    fig, axes = plt.subplots(top, 2, figsize=(7.0, top * 1.5))
+    fig, axes = plt.subplots(top, 2, figsize=(8.5, top * 1.5))
     fig.patch.set_facecolor(BG)
     fig.suptitle("most-distant flag pairs in DINOv2 space",
                  fontsize=20, fontweight="medium", color=TEXT,
@@ -145,10 +145,16 @@ def fig_distant_pairs(Xn: np.ndarray, meta: pd.DataFrame, top: int = 10):
             label = f"{meta.iloc[idx]['name']}"
             ax.text(0.5, -0.08, label, transform=ax.transAxes, fontsize=9,
                     color=TEXT, ha="center", va="top")
-        axes[k, 0].text(1.05, 0.5, f"{d:.2f}", transform=axes[k, 0].transAxes,
-                        fontsize=11, color=SUBTLE, ha="center", va="center")
     plt.subplots_adjust(left=0.04, right=0.96, top=0.93, bottom=0.02,
-                        hspace=0.6, wspace=0.4)
+                        hspace=0.6, wspace=0.5)
+    # Place distance labels in the gap between paired axes (figure coords).
+    for k, (_, _, d) in enumerate(pairs):
+        bbox_l = axes[k, 0].get_position()
+        bbox_r = axes[k, 1].get_position()
+        mid_x = (bbox_l.x1 + bbox_r.x0) / 2
+        mid_y = (bbox_l.y0 + bbox_l.y1) / 2
+        fig.text(mid_x, mid_y, f"{d:.2f}", fontsize=11, color=SUBTLE,
+                 ha="center", va="center")
     fig.savefig(OUT_ANALYSIS / "distant_pairs.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
@@ -177,7 +183,7 @@ def fig_cross_neighbors(Xn: np.ndarray, meta: pd.DataFrame, top: int = 10):
         if len(pairs) >= top:
             break
 
-    fig, axes = plt.subplots(top, 2, figsize=(7.5, top * 1.5))
+    fig, axes = plt.subplots(top, 2, figsize=(9.0, top * 1.6))
     fig.patch.set_facecolor(BG)
     fig.suptitle("nearest cross-category neighbors",
                  fontsize=20, fontweight="medium", color=TEXT,
@@ -200,10 +206,15 @@ def fig_cross_neighbors(Xn: np.ndarray, meta: pd.DataFrame, top: int = 10):
                      f"{NICE_NAME.get(cat, cat)}")
             ax.text(0.5, -0.08, label, transform=ax.transAxes, fontsize=8.5,
                     color=TEXT, ha="center", va="top", linespacing=1.3)
-        axes[k, 0].text(1.05, 0.5, f"{d:.2f}", transform=axes[k, 0].transAxes,
-                        fontsize=11, color=SUBTLE, ha="center", va="center")
     plt.subplots_adjust(left=0.04, right=0.96, top=0.93, bottom=0.02,
-                        hspace=1.0, wspace=0.4)
+                        hspace=1.05, wspace=0.5)
+    for k, (_, _, d) in enumerate(pairs):
+        bbox_l = axes[k, 0].get_position()
+        bbox_r = axes[k, 1].get_position()
+        mid_x = (bbox_l.x1 + bbox_r.x0) / 2
+        mid_y = (bbox_l.y0 + bbox_l.y1) / 2
+        fig.text(mid_x, mid_y, f"{d:.2f}", fontsize=11, color=SUBTLE,
+                 ha="center", va="center")
     fig.savefig(OUT_ANALYSIS / "cross_neighbors.png", dpi=200, facecolor=BG)
     plt.close(fig)
 
