@@ -81,7 +81,7 @@ PANELS = [
 
 
 def load_thumb(iso2: str, height_px: int, border_color: str | None,
-               border_px: int = 2) -> np.ndarray:
+               border_px: int = 3) -> np.ndarray:
     img = Image.open(PNG_DIR / f"{iso2}.png").convert("RGBA")
     bbox = img.getbbox()
     if bbox is not None:
@@ -142,7 +142,7 @@ def plot_panel(ax, df: pd.DataFrame, xcol: str, ycol: str, title: str,
             continue
         pts = sub[[xcol, ycol]].to_numpy()
         compact = category_compactness(pts, all_pts)
-        if compact < 0.55:
+        if compact < 0.65:
             add_soft_hull(ax, pts, CATEGORY_COLORS[cat])
 
     xs = all_pts[:, 0]
@@ -191,37 +191,47 @@ def build_legend(fig, df: pd.DataFrame):
     )
 
 
+def configure_typography():
+    preferred = ["Inter", "IBM Plex Sans", "Helvetica Neue", "Helvetica",
+                 "Arial", "DejaVu Sans"]
+    plt.rcParams["font.family"] = preferred
+    plt.rcParams["axes.titleweight"] = "medium"
+    plt.rcParams["pdf.fonttype"] = 42
+    plt.rcParams["ps.fonttype"] = 42
+
+
 def main() -> None:
     OUT_DIR.mkdir(parents=True, exist_ok=True)
+    configure_typography()
     df = pd.read_parquet(PROJ_DIR / "projections.parquet")
     print(f"plotting {len(df)} flags")
 
-    fig, axes = plt.subplots(1, 3, figsize=(26, 11))
+    fig, axes = plt.subplots(1, 3, figsize=(30, 13))
     fig.patch.set_facecolor(BG)
 
     for ax, (title, xcol, ycol, sub) in zip(axes, PANELS):
-        plot_panel(ax, df, xcol, ycol, title, sub)
+        plot_panel(ax, df, xcol, ycol, title, sub, thumb_height=34)
 
     fig.suptitle(
-        "Latent flags",
-        fontsize=26, fontweight="medium", color=TEXT,
-        x=0.025, y=0.965, ha="left",
+        "flag2vec",
+        fontsize=32, fontweight="medium", color=TEXT,
+        x=0.025, y=0.962, ha="left",
     )
     fig.text(
-        0.025, 0.928,
-        "DINOv2 visual embeddings of 197 sovereign flags, projected to 2D. "
-        "Borders mark hand-curated vexillological categories — "
+        0.025, 0.918,
+        "DINOv2 visual embeddings of 197 sovereign flags, projected to 2D three different ways. "
+        "Borders encode hand-curated vexillological categories — "
         "soft hulls appear only where a category's flags genuinely cluster in the projection.",
-        fontsize=12, color=SUBTLE, ha="left",
+        fontsize=13, color=SUBTLE, ha="left",
     )
 
     build_legend(fig, df)
-    plt.subplots_adjust(left=0.015, right=0.985, top=0.86,
-                        bottom=0.10, wspace=0.04)
+    plt.subplots_adjust(left=0.012, right=0.988, top=0.86,
+                        bottom=0.085, wspace=0.035)
 
     out_png = OUT_DIR / "latent_flags.png"
     out_pdf = OUT_DIR / "latent_flags.pdf"
-    fig.savefig(out_png, dpi=240, facecolor=BG)
+    fig.savefig(out_png, dpi=220, facecolor=BG)
     fig.savefig(out_pdf, facecolor=BG)
     print(f"wrote {out_png}")
     print(f"wrote {out_pdf}")
