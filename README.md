@@ -168,11 +168,54 @@ The full set of rule-based "average flags" — what a typical flag from each cat
 
 Ward-linkage hierarchical clustering on the full 384-dim space, leaves colored by vex category. The Nordic-cross subtree, the Pan-Arab subtree, and the British-ensign subtree are all visible as monochromatic spans.
 
+## Phase 2 — non-sovereign flags
+
+201 subdivision flags joined the embedding alongside the 197 sovereigns: 57 US states/territories, 47 Japanese prefectures, 27 Brazilian states, 26 Swiss cantons, 16 German Länder, 13 Canadian provinces/territories, 8 Australian states/territories, 4 UK constituent countries, plus Greenland, the Faroe Islands, and Åland (the Nordic autonomous regions). Vendored from [amckenna41/iso3166-flags](https://github.com/amckenna41/iso3166-flags) and [google/region-flags](https://github.com/google/region-flags).
+
+### Joint hero
+
+![phase 2 hero](out/phase2/hero.png)
+
+All 398 flags in DINOv2 space, sovereigns drawn slightly larger and on top, subdivisions slightly smaller behind. PCA / t-SNE / PHATE side-by-side.
+
+### Per-country highlights
+
+Drilling into each country's subdivisions: the parent national flag is drawn extra-large with a gold border so you can see where the parent sits relative to the cluster.
+
+| | n | compactness (lower = tighter) | k-NN lift over chance | |
+|---|---:|---:|---:|---|
+| Australia      |  8 | 0.54 | 31× | [`out/phase2/subdivisions_by_country/AU.png`](out/phase2/subdivisions_by_country/AU.png) |
+| Japan          | 47 | 0.75 |  5.4× | [`JP.png`](out/phase2/subdivisions_by_country/JP.png) |
+| Brazil         | 27 | 0.75 |  2.7× | [`BR.png`](out/phase2/subdivisions_by_country/BR.png) |
+| Canada         | 13 | 1.05 |  2.5× | [`CA.png`](out/phase2/subdivisions_by_country/CA.png) |
+| Germany        | 16 | 1.07 |  4.6× | [`DE.png`](out/phase2/subdivisions_by_country/DE.png) |
+| Switzerland    | 26 | 1.27 |  7.1× | [`CH.png`](out/phase2/subdivisions_by_country/CH.png) |
+| United States  | 57 | 1.27 |  3.0× | [`US.png`](out/phase2/subdivisions_by_country/US.png) |
+
+### Subdivision compactness
+
+![subdivision compactness](out/phase2/subdivision_compactness.png)
+
+Mean within-country pairwise cosine distance ÷ global mean. **Australia** is the tightest (0.54): all 8 of its state/territory flags are British-ensign-derived blue fields, and DINOv2 puts them right next to each other. **Japan** and **Brazil** are next, the prefectures and Brazilian states sharing strong national conventions. **US, Switzerland, UK** sit *above* global spread — meaning US states are, on average, *farther* from each other than two random flags are. The "blue-field-with-state-seal" convention is much weaker than it looks at a glance, because the seals themselves vary enormously (Maryland, New Mexico, Texas, California are all wildly distinct).
+
+### k-NN lift over chance
+
+![knn lift](out/phase2/knn_purity_by_country.png)
+
+Compactness undersells the within-country convention because it averages all pairwise distances. **k-NN lift** compares the fraction of each subdivision's 5 nearest neighbors that come from the same country to the per-country chance baseline. Every subdivision set lifts well above chance: **Australia 31×**, **Switzerland 7×**, **UK 7×**, **Japan 5×**, **Germany 5×**, **US 3×**, **Brazil/Canada ≈ 2.5×**. Even visually-varied sets (Switzerland's heraldic miniatures, the four UK home nations) have neighborhoods full of their siblings — DINOv2 sees the family resemblance even when the global spread is wide.
+
+### Subdivision → national flag distance
+
+![subdivision to parent](out/phase2/subdivision_to_parent.png)
+
+Each dot is one subdivision's cosine distance to its parent national flag in DINOv2 space; the vertical bar is the country mean. Australia's state flags are *closest* to their parent (they are British ensigns, like the AU national flag itself). Japan's mean is also low. The UK's is high — the Union Jack is visually unrelated to the St George's Cross, the saltire of St Andrew, the Welsh dragon, or the Ulster Banner.
+
 ## Phase plan
 
-- **Phase 1** — sovereign / observer states, 197 flags. *This commit.*
-- **Phase 2** — major subdivisions (US states, Swiss cantons, German Länder, Indian states, Brazilian states, Canadian provinces). Will produce a hero figure for subdivisions plus a cross-tab figure showing whether US states cluster with each other or near similar national flags.
+- **Phase 1** — sovereign / observer states, 197 flags. *Shipped.*
+- **Phase 2** — major subdivisions, 201 flags. *Shipped.*
 - **Phase 3** — historical flags (USSR, Yugoslavia, Czechoslovakia, Rhodesia, Apartheid SA, French royal banners, Confederate, pre-1991 Eastern Bloc, Ottoman). Trajectories from historical flag → modern successor visualized as arrows in latent space.
+- **Phase 4** — beaded creative spin-off: Mars-terraformed flags. Earth flag tradition geography → Martian regional inheritance → procedurally generated Martian flags → embed sanity-check.
 
 ## Run
 
@@ -189,9 +232,15 @@ python scripts/07_per_category.py     # 15 vex-category highlight figures
 python scripts/08_per_region.py       # 5 region highlight figures
 python scripts/09_clustering.py       # quantitative metric figures
 python scripts/10_galleries.py        # image-based galleries
+python scripts/11_average_flags.py    # avg-flag analysis vs UN flag
+
+# Phase 2 — joint with subdivisions
+python scripts/12_build_subdivision_csv.py  # build subdivision_flags.csv
+python scripts/13_phase2_pipeline.py        # rasterize + embed + project + render
+python scripts/14_phase2_findings.py        # subdivision-specific findings
 ```
 
-CPU-only inference. End-to-end runs in ~10 min on a 2-core machine.
+CPU-only inference. End-to-end runs in ~20 min on a 2-core machine.
 
 ## Why the name
 
