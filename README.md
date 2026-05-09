@@ -210,12 +210,80 @@ Compactness undersells the within-country convention because it averages all pai
 
 Each dot is one subdivision's cosine distance to its parent national flag in DINOv2 space; the vertical bar is the country mean. Australia's state flags are *closest* to their parent (they are British ensigns, like the AU national flag itself). Japan's mean is also low. The UK's is high — the Union Jack is visually unrelated to the St George's Cross, the saltire of St Andrew, the Welsh dragon, or the Ulster Banner.
 
+## Phase 4 — Mars-terraformed flags
+
+A creative-cartography spin-off. Year ~2300. Two centuries into Martian terraforming, the surface has cooled into something a settler might call habitable: thin nitrogen-argon air, a sub-zero polar tundra, sage-green algal rivers in the equatorial canyons, and a sky that softens to dusty pink at dawn instead of the iron-black of the Hesperian. Twenty-five regional governments — newly seated under the Areocentric Compact — commission their first flags.
+
+Each region inherits an Earth flag tradition based on a defensible analogy (climate, terrain, settlement order, function), then layers Mars-specific motifs on top. The question this phase asks: when DINOv2 embeds the resulting Mars flags alongside the 197 Earth sovereigns + 201 subdivisions, **does each Mars flag actually land near its predicted Earth tradition's cluster?**
+
+![mars map](out/mars/mars_map.png)
+
+The 25 inheritance choices are documented in `data/mars_regions.csv` and the underlying Earth-tradition geography in [`out/mars/earth_traditions.md`](out/mars/earth_traditions.md). Sample inheritances:
+
+- **Vastitas Borealis** (north polar lowland, formerly hypothesized frozen ocean) → **Nordic cross.** Climate parallel.
+- **Arabia Terra** → **Pan-Arab.** The toponym is irresistible; the Compact's naming committee leaned in.
+- **Tharsis Plateau** (volcanic highland, the Andean parallel) → **Latin (charge).** Highland federation founded by post-independence settlers.
+- **Utopia Planitia** (Tianwen-1 + Viking 2 site) → **Communist red.** Treaty commemoration of the 2021 Chinese landing.
+- **Margaritifer Terra** ("pearl-bearing land") → **British ensign.** Maritime trade-route imagery; settled in waves by an ocean-going power.
+- **Cydonia** (the Face on Mars region) → **Solid + emblem.** The apocryphal Face takes the central charge.
+
+### Procedural generation
+
+`scripts/17_mars_generate.py` reuses the `CATEGORY_TEMPLATES` from `scripts/11_average_flags.py` (factored into `scripts/_earth_templates.py` for clean import). Each Mars flag is built in three stages:
+
+1. **Earth template.** Pick the inherited tradition's SVG template (e.g. `template_pan_arab` for Arabia Terra).
+2. **Mars palette transformer.** Substitute every hex color in the SVG with its nearest Mars equivalent: blue → rust-orange (no blue under a barely-terraformed sky), white → pale-cream (dusty haze), green → sage (the only plausible terraformed flora green), red → iron-red (regolith), yellow → sulfur (Tharsis sulfate evaporite). Each flag also receives at least one Mars-specific accent — ice-cyan for subsurface H₂O ice, dark basalt for volcanic terrain, etc.
+3. **Mars overlay.** Inject a region-specific SVG fragment: Olympus Mons silhouette, polar cap, Phobos+Deimos pair, dust-storm spiral, Valles Marineris canyon line, Viking-style lander, Sun disc, "Face" silhouette, or a few others. Overlays kept ≤25% of canvas.
+
+### Embed sanity-check
+
+![joint embedding](out/mars/joint_embedding.png)
+
+`scripts/18_mars_embed.py` embeds the 25 Mars flags via the same DINOv2 ViT-S/14 used in Phase 1/2 (positional embeddings interpolated to a smaller 224×224 input for CPU speed — internally consistent because every flag in the joint analysis passes through the same resolution; the Phase 1/2 figures keep their original 518×518 embeddings under `data/embeddings/`). The 197 sovereign flags + 25 Mars flags are projected jointly with PCA / t-SNE / PHATE. For each Mars flag, the script then computes cosine distance to the centroid of every Earth tradition. Subdivisions are deliberately excluded from the centroids — they inherit their parent's hand-label, which would distort the within-tradition averages.
+
+A **hit** = the inherited tradition is the *nearest* of the 12 Earth tradition centroids in DINOv2 space (3 of the 15 vex categories — `unique`, `saltire`, `british_ensign`-as-sovereign-only — collapse small enough that their centroids are wobbly; reported separately as part of the per-region table).
+
+**Headline result: 13/25 = 52% top-1 hit rate, 17/25 = 68% top-3 hit rate; lift ≈ 4.7× over chance.**
+
+The hits cluster on the structurally distinctive traditions (Nordic cross 2/2, solid+emblem 3/3, vertical tricolor 2/2, star & crescent 2/2, plus the singletons pan-Arab, communist red, stars & stripes, horizontal tricolor — all hit rank 1). The misses cluster on the *exact* set Phase 1 flagged as visually heterogeneous: heraldic 0/3, pan-African 0/2, pan-Slavic 0/2, latin (charge) 0/2, plus the singleton british_ensign and saltire. The DINOv2 embedding is sensitive to the form of the Earth template, and the Mars palette transformation propagates that sensitivity: when a tradition's *form* is consistent on Earth, the Mars descendant lands near its ancestor; when the tradition is held together by *color tradition only*, the descendant scatters.
+
+![inheritance check](out/mars/inheritance_check.png)
+
+![inheritance hit rate](out/mars/inheritance_hit_rate.png)
+
+The inheritance-check strip-figure sorts Mars regions by how close they landed to their inherited tradition, with the prototypical Earth flag of the Mars flag's *actual* nearest tradition shown alongside. The hit-rate bar uses a continuous score (rank 1 of 15 = score 1.0, rank 8 ≈ chance) so structurally-correct-but-not-top-1 inheritances are visible as partial credit instead of binary misses.
+
+A few specific failure modes are vexillologically informative. The three **heraldic** inheritances (Argyre, Marineris, Noachis) all collapsed onto `solid_emblem` or `star_crescent` — the heraldic template's medieval coat-of-arms is reduced by the templating system to "single field + central charge", which is structurally indistinguishable from solid+emblem. The two **pan-African** inheritances (Elysium, Mangala) landed on `unique` rather than pan-African — the Ethiopian tricolor + black star was preserved structurally but the Mars palette pushed the green band into sage and the yellow into sulfur, dragging the joint embedding away from the Ghana / Senegal / Mali centroid and into the residual cluster of "doesn't look like anything else." The single **british ensign** inheritance (Margaritifer) missed for a related reason: the canton design is heavy enough that the Mars repaint distinguishes it from the (very tight) Earth UK / Australia / NZ / Fiji / Tuvalu cluster.
+
+### Files
+
+```
+out/mars/
+  earth_traditions.md         # 15 vex categories: where each dominates on Earth + emergence dates
+  mars_map.png                # 25 flags placed at lat/long over Mars topographic backdrop
+  joint_embedding.png         # 3-panel PCA/t-SNE/PHATE, Earth+Mars, Mars highlighted
+  inheritance_check.png       # per-Mars-flag → nearest Earth tradition centroid strip
+  inheritance_hit_rate.png    # bar chart of inherited-tradition rank
+  flags/<region_id>.png       # the 25 generated Mars flags
+data/
+  mars_regions.csv            # 25 regions with feature_type, lat/long, inherited tradition
+  mars_embeddings.npy         # DINOv2 embeddings of the 25 Mars flags
+  mars_distance_table.csv     # per-region distance to inherited + nearest tradition
+  projections/projections_all_phase4.parquet  # joint PCA/t-SNE/PHATE coords
+scripts/
+  _earth_templates.py         # CATEGORY_TEMPLATES, importable
+  _mars_lib.py                # palette transformer + overlay registry + render utility
+  17_mars_generate.py         # generate Mars flags
+  18_mars_embed.py            # DINOv2 embed + hit-rate analysis
+  19_mars_render.py           # the four figures
+```
+
 ## Phase plan
 
 - **Phase 1** — sovereign / observer states, 197 flags. *Shipped.*
 - **Phase 2** — major subdivisions, 201 flags. *Shipped.*
 - **Phase 3** — historical flags (USSR, Yugoslavia, Czechoslovakia, Rhodesia, Apartheid SA, French royal banners, Confederate, pre-1991 Eastern Bloc, Ottoman). Trajectories from historical flag → modern successor visualized as arrows in latent space.
-- **Phase 4** — beaded creative spin-off: Mars-terraformed flags. Earth flag tradition geography → Martian regional inheritance → procedurally generated Martian flags → embed sanity-check.
+- **Phase 4** — Mars-terraformed flags. *Shipped.* See above.
 
 ## Run
 
@@ -238,6 +306,11 @@ python scripts/11_average_flags.py    # avg-flag analysis vs UN flag
 python scripts/12_build_subdivision_csv.py  # build subdivision_flags.csv
 python scripts/13_phase2_pipeline.py        # rasterize + embed + project + render
 python scripts/14_phase2_findings.py        # subdivision-specific findings
+
+# Phase 4 — Mars
+python scripts/17_mars_generate.py          # 25 Mars flags
+python scripts/18_mars_embed.py             # embed + hit-rate analysis
+python scripts/19_mars_render.py            # mars_map / joint_embedding / inheritance_check / inheritance_hit_rate
 ```
 
 CPU-only inference. End-to-end runs in ~20 min on a 2-core machine.
