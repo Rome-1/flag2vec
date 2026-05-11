@@ -210,11 +210,48 @@ Compactness undersells the within-country convention because it averages all pai
 
 Each dot is one subdivision's cosine distance to its parent national flag in DINOv2 space; the vertical bar is the country mean. Australia's state flags are *closest* to their parent (they are British ensigns, like the AU national flag itself). Japan's mean is also low. The UK's is high — the Union Jack is visually unrelated to the St George's Cross, the saltire of St Andrew, the Welsh dragon, or the Ulster Banner.
 
+## Phase 3 — historical flags and trajectories
+
+30 historical flags joined the embedding alongside the 197 sovereigns and 201 subdivisions: USSR, Russian Empire (Romanov), SFR Yugoslavia, Kingdom of Yugoslavia, Czechoslovakia, East Germany, Rhodesia, Apartheid South Africa, South / North Yemen, South Vietnam, the two Confederate flags (Stars-and-Bars and Battle), British Raj, Republic of China (mainland), Manchukuo, Imperial Japan (Rising Sun), Pahlavi Iran, the Khmer Republic and Democratic Kampuchea, Republic of Texas, Kingdom of Hawaiʻi, independent Tibet, Biafra, Katanga, the Ottoman Empire, Austria-Hungary, the Holy Roman Empire, the Bogd Khanate of Mongolia, and the United Arab Republic. Each is paired with one canonical "modern successor" sovereign (USSR → Russia, Confederate → United States, Manchukuo → China, etc.). Sourced from Wikimedia Commons and rasterized through the same pipeline as Phases 1 and 2.
+
+### Joint hero
+
+![phase 3 hero](out/phase3/hero.png)
+
+All 428 flags in DINOv2 space — sovereigns and subdivisions in their phase-2 positions, with historical flags rendered in sepia and a gold border, drawn on top so you can read where each predecessor sits relative to its modern successor.
+
+### Trajectories — the headline figure
+
+![trajectories](out/phase3/trajectories.png)
+
+For each historical flag, an arrow runs from its position to its modern successor's position in t-SNE space. Arrow color encodes era midpoint (viridis: dark = older). Sovereigns and subdivisions are faded to grayscale in the background so the trajectories are legible. Historical flags carry a gold border; successors are drawn full-color.
+
+The 5 longest and 5 shortest trajectories are labeled. Long trajectories are flags whose successor is visually unlike the predecessor — the Holy Roman Empire's black eagle on yellow → Germany's modern horizontal tricolor, Kingdom-Yugoslavia's pan-Slavic tricolor → Serbia's modern flag with central emblem, the DDR → modern Germany. Short trajectories are flags whose successor kept the predecessor's design — Czechoslovakia → Czech Republic (the Czech Republic kept the flag verbatim), the Ottoman Empire → modern Turkey (almost the same red-with-crescent-and-star design).
+
+### Trajectory length
+
+![trajectory lengths](out/phase3/trajectory_lengths.png)
+
+Bar chart of cosine distance between each historical flag and its successor in 384-dim DINOv2 space, sorted ascending. Bars colored by historical-flag vex category. The shortest trajectories are near-identical pairs: **Czechoslovakia → Czech Republic** (d ≈ 0.000 — literally the same flag) and **Ottoman → Turkey** (d ≈ 0.007 — modern Turkey kept the Ottoman crescent-and-star on red). The longest trajectories are radical visual breaks: **Holy Roman Empire → Germany** (d ≈ 0.86, black eagle on yellow → horizontal tricolor), **Kingdom Yugoslavia → Serbia** (0.62), **DDR → modern Germany** (0.57, the East German horizontal tricolor carried a hammer-and-compass emblem at center), **Rhodesia → Zimbabwe** (0.56, green-white-green with shield → seven-stripe pan-African), and **Imperial Japan (Rising Sun) → Hinomaru** (0.43, 16-ray sunburst → solid red disc).
+
+### Per-successor
+
+![per successor](out/phase3/per_successor.png)
+
+For modern countries with multiple historical predecessors (USSR + Russian Empire → Russia; SFR + Kingdom Yugoslavia → Serbia; ROC + Manchukuo + Tibet → China; Stars-and-Bars + Battle Flag + Republic of Texas + Kingdom of Hawaiʻi → United States; Khmer Republic + Democratic Kampuchea → Cambodia; North + South Yemen → Yemen), small-multiples show each predecessor next to the modern flag with the cosine distance between them. The figure also includes the most-radical singleton trajectories.
+
+A few patterns worth noting:
+
+- **Identity-preserving successions are detectable as near-zero distances.** Czechoslovakia ↔ Czech Republic sits at d ≈ 0; Ottoman ↔ Turkey at 0.007.
+- **Color-tradition continuity beats emblem change.** The Russian Empire's Romanov tricolor (black-yellow-white) → modern Russia (white-blue-red) is only 0.07 apart — same horizontal-tricolor structure, even though all three stripe colors changed. The CSA Stars-and-Bars → US (0.08) is similarly close because both share the canton-plus-stripes blueprint.
+- **Modernization radicals.** Imperial Japan → Hinomaru is one of the longest (d ≈ 0.43): the Rising Sun is a 16-ray sunburst structure, while the modern flag is a single solid disc — DINOv2 sees them as visually different objects despite the shared red/white palette. Democratic Kampuchea → Cambodia (0.47) is even further: a stylized red Angkor-Wat silhouette on red vs. modern Cambodia's blue/red/blue with full Angkor-Wat illustration.
+- **Successor multiplicity.** When several historical flags map to the same modern successor — USSR (0.14) + Russian Empire (0.07) → Russia; CSA Stars-and-Bars (0.08) + CSA Battle (0.28) + Texas (0.15) + Hawaiʻi (0.15) → United States — DINOv2 places the predecessors in *different* parts of the latent space, so the modern flag "inherits from" multiple regions of historical-flag space at once.
+
 ## Phase plan
 
 - **Phase 1** — sovereign / observer states, 197 flags. *Shipped.*
 - **Phase 2** — major subdivisions, 201 flags. *Shipped.*
-- **Phase 3** — historical flags (USSR, Yugoslavia, Czechoslovakia, Rhodesia, Apartheid SA, French royal banners, Confederate, pre-1991 Eastern Bloc, Ottoman). Trajectories from historical flag → modern successor visualized as arrows in latent space.
+- **Phase 3** — 30 historical flags + trajectory arrows to modern successors. *Shipped.*
 - **Phase 4** — beaded creative spin-off: Mars-terraformed flags. Earth flag tradition geography → Martian regional inheritance → procedurally generated Martian flags → embed sanity-check.
 
 ## Run
@@ -238,6 +275,11 @@ python scripts/11_average_flags.py    # avg-flag analysis vs UN flag
 python scripts/12_build_subdivision_csv.py  # build subdivision_flags.csv
 python scripts/13_phase2_pipeline.py        # rasterize + embed + project + render
 python scripts/14_phase2_findings.py        # subdivision-specific findings
+
+# Phase 3 — historical flags + trajectories
+python scripts/fetch_historical_svgs.py     # download 30 SVGs from Wikimedia Commons
+python scripts/15_phase3_pipeline.py        # rasterize + joint embed + project
+python scripts/16_phase3_render.py          # hero, trajectories, lengths, per-successor
 ```
 
 CPU-only inference. End-to-end runs in ~20 min on a 2-core machine.
