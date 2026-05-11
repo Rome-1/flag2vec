@@ -1,0 +1,26 @@
+region_id,name,inherited_tradition,nearest_tradition,nearest_centroid_iso2,inherited_centroid_iso2,distance_nearest,distance_inherited,rank_inherited,hit,top3_hit
+mars-tharsis,Tharsis Plateau,latin_charge,pan_arab,ps,ni,0.2124859094619751,0.26323962211608887,8,False,False
+mars-olympus,Olympus Mons,communist_red,solid_emblem,ma,cn,0.1950492262840271,0.22614729404449463,3,False,True
+mars-hellas,Hellas Basin,solid_emblem,solid_emblem,ma,ma,0.1692972183227539,0.1692972183227539,1,True,True
+mars-argyre,Argyre Basin,heraldic,solid_emblem,ma,es,0.24006015062332153,0.3845686912536621,14,False,False
+mars-marineris,Valles Marineris,heraldic,solid_emblem,ma,es,0.23392367362976074,0.4158419966697693,14,False,False
+mars-vastitas,Vastitas Borealis,nordic_cross,nordic_cross,no,no,0.11319571733474731,0.11319571733474731,1,True,True
+mars-australe,Planum Australe,nordic_cross,nordic_cross,no,no,0.11319571733474731,0.11319571733474731,1,True,True
+mars-arabia,Arabia Terra,pan_arab,pan_arab,ps,ps,0.15873897075653076,0.15873897075653076,1,True,True
+mars-sirenum,Terra Sirenum,pan_slavic,pan_arab,ps,si,0.26336538791656494,0.32104742527008057,7,False,False
+mars-cydonia,Cydonia,solid_emblem,solid_emblem,ma,ma,0.16067618131637573,0.16067618131637573,1,True,True
+mars-elysium,Elysium Planitia,pan_african,unique,ph,gh,0.11730420589447021,0.1231844425201416,2,False,True
+mars-amazonis,Amazonis Planitia,stars_stripes,stars_stripes,lr,lr,0.13824796676635742,0.13824796676635742,1,True,True
+mars-utopia,Utopia Planitia,communist_red,communist_red,cn,cn,0.1023971438407898,0.1023971438407898,1,True,True
+mars-acidalia,Acidalia Planitia,horizontal_tricolor,horizontal_tricolor,lu,lu,0.11687511205673218,0.11687511205673218,1,True,True
+mars-chryse,Chryse Planitia,solid_emblem,solid_emblem,ma,ma,0.16151607036590576,0.16151607036590576,1,True,True
+mars-eridania,Eridania,vertical_tricolor,vertical_tricolor,ci,ci,0.1857689619064331,0.1857689619064331,1,True,True
+mars-aeolis,Aeolis,star_crescent,star_crescent,az,az,0.10515785217285156,0.10515785217285156,1,True,True
+mars-mangala,Mangala Valles,pan_african,unique,ph,gh,0.21694839000701904,0.22222644090652466,2,False,True
+mars-noachis,Noachis Terra,heraldic,star_crescent,az,es,0.2508050203323364,0.3742530345916748,12,False,False
+mars-solis,Solis Planum,latin_charge,solid_emblem,ma,ni,0.11804628372192383,0.1590416431427002,7,False,False
+mars-margaritifer,Margaritifer Terra,british_ensign,unique,ph,tv,0.13888859748840332,0.14338791370391846,3,False,True
+mars-phlegra,Phlegra Montes,saltire,pan_arab,ps,bi,0.21259009838104248,0.3098890781402588,9,False,False
+mars-thaumasia,Thaumasia Highlands,pan_slavic,solid_emblem,ma,si,0.2685049772262573,0.2955840826034546,4,False,False
+mars-tempe,Tempe Terra,vertical_tricolor,vertical_tricolor,ci,ci,0.17265796661376953,0.17265796661376953,1,True,True
+mars-sabaea,Terra Sabaea,star_crescent,star_crescent,az,az,0.09847259521484375,0.09847259521484375,1,True,True
