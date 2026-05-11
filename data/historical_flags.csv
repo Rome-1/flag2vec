@@ -1,0 +1,31 @@
+iso2,name,vex_category,successor_iso2,era_start,era_end,kind
+hist-ussr,Soviet Union,communist_red,ru,1922,1991,historical
+hist-russian-empire,Russian Empire (Romanov),horizontal_tricolor,ru,1858,1883,historical
+hist-yugoslavia-sfry,SFR Yugoslavia,communist_red,rs,1946,1992,historical
+hist-yugoslavia-kingdom,Kingdom of Yugoslavia,pan_slavic,rs,1918,1941,historical
+hist-czechoslovakia,Czechoslovakia,pan_slavic,cz,1920,1992,historical
+hist-ddr,East Germany (DDR),horizontal_tricolor,de,1959,1990,historical
+hist-rhodesia,Rhodesia,unique,zw,1968,1979,historical
+hist-south-africa-apartheid,South Africa (1928-1994),unique,za,1928,1994,historical
+hist-south-vietnam,South Vietnam,solid_emblem,vn,1955,1975,historical
+hist-south-yemen,South Yemen (PDRY),pan_arab,ye,1967,1990,historical
+hist-north-yemen,North Yemen (YAR),pan_arab,ye,1962,1990,historical
+hist-csa-stars-bars,Confederate States (Stars and Bars),stars_stripes,us,1861,1863,historical
+hist-csa-battle,Confederate Battle Flag,saltire,us,1861,1865,historical
+hist-british-raj,British Raj,british_ensign,in,1880,1947,historical
+hist-roc-mainland,Republic of China (mainland),solid_emblem,cn,1928,1949,historical
+hist-manchukuo,Manchukuo,horizontal_tricolor,cn,1932,1945,historical
+hist-imperial-japan,Imperial Japan (Rising Sun),solid_emblem,jp,1870,1945,historical
+hist-iran-pahlavi,Iran (Pahlavi),horizontal_tricolor,ir,1933,1979,historical
+hist-khmer-republic,Khmer Republic,solid_emblem,kh,1970,1975,historical
+hist-democratic-kampuchea,Democratic Kampuchea,communist_red,kh,1975,1979,historical
+hist-republic-of-texas,Republic of Texas,stars_stripes,us,1839,1846,historical
+hist-hawaii-kingdom,Kingdom of Hawaiʻi,british_ensign,us,1845,1898,historical
+hist-tibet-independent,Tibet (independent),unique,cn,1916,1950,historical
+hist-biafra,Biafra,horizontal_tricolor,ng,1967,1970,historical
+hist-katanga,Katanga,unique,cd,1960,1963,historical
+hist-ottoman,Ottoman Empire,star_crescent,tr,1844,1922,historical
+hist-austria-hungary,Austria-Hungary,heraldic,at,1869,1918,historical
+hist-holy-roman-empire,Holy Roman Empire,heraldic,de,1400,1806,historical
+hist-mongolia-bogd,Bogd Khanate of Mongolia,unique,mn,1911,1921,historical
+hist-uar,United Arab Republic,pan_arab,eg,1958,1971,historical
