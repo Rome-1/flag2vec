@@ -334,6 +334,11 @@ button.ghost-small{
   box-shadow: 0 20px 60px rgba(0,0,0,.55);
   transition: opacity .12s ease;
 }
+/* Must come after .tooltip — the class selector by itself sets display:flex,
+   which would beat the browser's default `[hidden] { display: none }` on
+   source-order tie-break. Without this explicit rule the tooltip never hides. */
+.tooltip[hidden]{ display: none !important; }
+.detail[hidden]{ display: none !important; }
 .tooltip img{
   width: 92px; height: 62px; object-fit: contain;
   background: #fff; border-radius: 4px;

@@ -384,7 +384,13 @@ function onPointerMove(ev){
     showTooltip(idx, ev.clientX, ev.clientY);
     bringForward(hits[0].object);
   } else {
+    // Cursor moved off all sprites — drop tooltip AND restore the previously
+    // hovered sprite to its normal scale (otherwise it'd stay enlarged, which
+    // makes the bounding box stickier on the next near-pass).
     hideTooltip();
+    if (state.hoveredIdx >= 0 && state.hoveredIdx !== state.selectedIdx){
+      state.sprites[state.hoveredIdx].scale.set(0.42, 0.28, 1);
+    }
     state.hoveredIdx = -1;
   }
 }
