@@ -71,11 +71,55 @@ const colorFor = (mode, flag) => {
 
 const formatTradition = (t) => (t || "—").replaceAll("_", " ");
 
+// vex_categories that actually have a published figure in out/categories/.
+// The 3 missing ones (us_state_seal, swiss_canton, japanese_geometric) are
+// subdivision-only categories — those flags get a phase-2 country figure
+// instead, or fall back to the README. Keeping this list explicit so a
+// broken link can't slip in unnoticed.
+const CATEGORY_FIGURES = new Set([
+  "british_ensign","communist_red","heraldic","horizontal_tricolor",
+  "latin_charge","nordic_cross","pan_african","pan_arab","pan_slavic",
+  "saltire","solid_emblem","star_crescent","stars_stripes","unique",
+  "vertical_tricolor",
+]);
+const PHASE2_COUNTRIES = new Set(["au","br","ca","ch","de","jp","us"]);
+const README_ANCHORS = {
+  vex: "https://github.com/Rome-1/flag2vec#by-vex-category",
+  region: "https://github.com/Rome-1/flag2vec#by-geographic-region",
+  phase2: "https://github.com/Rome-1/flag2vec#phase-2--non-sovereign-flags",
+  phase3: "https://github.com/Rome-1/flag2vec#phase-3--historical-flags-and-trajectories",
+  mars: "https://github.com/Rome-1/flag2vec#phase-4--mars-terraformed-flags",
+};
+
+function projectLinkFor(f){
+  if (f.kind === "mars") return README_ANCHORS.mars;
+  if (f.kind === "subdivision"){
+    const parent = (f.parent || "").toLowerCase();
+    if (PHASE2_COUNTRIES.has(parent)){
+      return `https://github.com/Rome-1/flag2vec/blob/main/out/phase2/subdivisions_by_country/${parent.toUpperCase()}.png`;
+    }
+    return README_ANCHORS.phase2;
+  }
+  if (f.vex_category && CATEGORY_FIGURES.has(f.vex_category)){
+    return `https://github.com/Rome-1/flag2vec/blob/main/out/categories/${f.vex_category}.png`;
+  }
+  return README_ANCHORS.vex;
+}
+
 // ─── State ────────────────────────────────────────────────────────────────
+// Filters that the page boots with — and that "reset" restores. Only sovereigns
+// by default; subdivisions and Mars flags are opt-in via the kind chips.
+const DEFAULT_FILTERS = () => ({
+  vex_category: new Set(),
+  region: new Set(),
+  kind: new Set(["sovereign"]),
+  palette_families: new Set(),
+});
+
 const state = {
   projection: "tsne3",
   colorBy: "vex_category",
-  filters: { vex_category: new Set(), region: new Set(), kind: new Set(), palette_families: new Set() },
+  filters: DEFAULT_FILTERS(),
   query: "",
   data: null,
   byId: new Map(),
@@ -197,8 +241,39 @@ function initScene(){
   ro.observe(wrap);
 
   // Buttons
-  resetBtn.addEventListener("click", () => animateCamera(new THREE.Vector3(7,5,9), new THREE.Vector3(0,0,0), 1.2));
+  resetBtn.addEventListener("click", () => {
+    // Restore default sovereign-only filter + recenter the camera.
+    state.filters = DEFAULT_FILTERS();
+    syncChipsFromState();
+    applyFilters();
+    animateCamera(new THREE.Vector3(7,5,9), new THREE.Vector3(0,0,0), 1.2);
+    state.controls.autoRotate = true;
+  });
   detailClose.addEventListener("click", () => { detail.hidden = true; state.selectedIdx = -1; refreshHighlights(); });
+
+  // Fullscreen toggle (on the canvas wrapper, not just the canvas — keeps the
+  // toolbar / filter panel / legend overlaid inside fullscreen).
+  const fsBtn = $("#fullscreen");
+  if (fsBtn) fsBtn.addEventListener("click", () => {
+    if (document.fullscreenElement){
+      document.exitFullscreen();
+    } else {
+      wrap.requestFullscreen().catch((e) => console.warn("fullscreen denied", e));
+    }
+  });
+  document.addEventListener("fullscreenchange", () => {
+    if (fsBtn) fsBtn.classList.toggle("on", !!document.fullscreenElement);
+    // canvas size changes — let the ResizeObserver pick it up on next frame
+  });
+
+  // The hover tooltip lives inside #canvas-wrap, so when the user scrolls the
+  // page (and the canvas moves under the still-stationary cursor) we never get
+  // a pointermove/pointerleave event — the tooltip would stay pinned. Hide it
+  // on any scroll. Same for window blur (alt-tab away mid-hover).
+  const onScrollOrBlur = () => { if (!tooltip.hidden) hideTooltip(); state.hoveredIdx = -1; };
+  window.addEventListener("scroll", onScrollOrBlur, { passive: true });
+  window.addEventListener("blur", onScrollOrBlur);
+  document.addEventListener("visibilitychange", () => { if (document.hidden) onScrollOrBlur(); });
 
   // Animation loop
   state.renderer.setAnimationLoop(tick);
@@ -379,12 +454,7 @@ function selectFlag(idx){
   detailKvs.innerHTML = rows.map(([k,v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join("");
   detailPal.innerHTML = (f.palette || []).map(p => `<span style="background:${p.hex}" title="${p.hex}"></span>`).join("");
 
-  // Project link — fall back to README anchor for traditions.
-  let url;
-  if (f.kind === "mars") url = "https://github.com/Rome-1/flag2vec#phase-4--mars-terraformed-flags";
-  else if (f.vex_category) url = `https://github.com/Rome-1/flag2vec/blob/main/out/categories/${f.vex_category}.png`;
-  else url = "https://github.com/Rome-1/flag2vec";
-  detailLink.href = url;
+  detailLink.href = projectLinkFor(f);
 
   refreshHighlights();
   flyToFlag(idx);
@@ -440,9 +510,10 @@ function buildFilters(){
 function buildChips(filterKey, values, colorFn, labelFn = (v) => v){
   const container = document.querySelector(`.chips[data-filter="${filterKey}"]`);
   container.innerHTML = "";
+  const active = state.filters[filterKey];
   values.forEach(v => {
     const chip = document.createElement("button");
-    chip.className = "chip";
+    chip.className = "chip" + (active.has(v) ? " on" : "");
     chip.dataset.filter = filterKey;
     chip.dataset.value = v;
     chip.innerHTML = `<span class="dot-color" style="background:${colorFn(v)}"></span>${labelFn(v)}`;
@@ -488,6 +559,8 @@ function applyFilters(){
 }
 
 function wireFilters(){
+  // "Clear filters" — fully empty all chip sets. Escape hatch from the
+  // sovereign-only default. (Reset, by contrast, restores defaults.)
   clearBtn.addEventListener("click", () => {
     Object.values(state.filters).forEach(s => s.clear());
     $$(".chip.on").forEach(c => c.classList.remove("on"));
@@ -495,6 +568,17 @@ function wireFilters(){
     state.query = "";
     applyFilters();
   });
+}
+
+function syncChipsFromState(){
+  // Reconcile the chip .on classes with state.filters Sets.
+  $$(".chip").forEach(chip => {
+    const k = chip.dataset.filter;
+    const v = chip.dataset.value;
+    if (!k) return;
+    chip.classList.toggle("on", state.filters[k]?.has(v));
+  });
+  searchInp.value = state.query || "";
 }
 
 function wireSearch(){

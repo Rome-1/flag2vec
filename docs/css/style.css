@@ -190,8 +190,20 @@ button.ghost{
   border: 1px solid var(--line-2);
   padding: .42rem .85rem; border-radius: 999px;
   font-size: .82rem;
+  display: inline-flex; align-items: center; gap: 6px;
 }
 button.ghost:hover{ color: var(--ink); border-color: var(--ink-dim) }
+button.ghost.on{ color: var(--ink); border-color: var(--accent); background: var(--accent-soft) }
+#fullscreen{ padding: .42rem .55rem }
+#fullscreen svg{ display:block }
+
+/* When the canvas wrapper enters fullscreen, fill the screen and keep all
+   overlays (toolbar, panel, legend, detail) visible — they're children. */
+#canvas-wrap:fullscreen,
+#canvas-wrap:-webkit-full-screen{
+  width: 100vw; height: 100vh; max-height: none;
+  border-radius: 0; border: none;
+}
 button.ghost-small{
   background: transparent; color: var(--ink-dim);
   border: 1px solid var(--line);
