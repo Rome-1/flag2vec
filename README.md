@@ -2,6 +2,9 @@
 
 A flags-domain analogue of Figure 3 in [emoji2vec](https://arxiv.org/abs/1609.08359) (Eisner et al., 2016) — and an exploration of what DINOv2's visual embedding space says about national flags.
 
+> ### → [Interactive 3D atlas](https://rome-1.github.io/flag2vec/)
+> All 423 flags (197 sovereigns + 201 subdivisions + 25 procedurally-generated Mars) in DINOv2 latent space. Spin the cloud, hover for tooltips, click for flag detail, filter by region or vex category, toggle PCA / t-SNE / PHATE side-by-side.
+
 ![hero](out/latent_flags.png)
 
 emoji2vec's Figure 3 projects 1,661 emoji embeddings to 2D with t-SNE and renders each emoji glyph at its position. Clusters of similar emojis (smileys, animals, fruits, flags) emerge from a *language*-derived embedding space — and notably, in the original paper, all the country flags pile into one undifferentiated cluster, because their Unicode keyword sets are dominated by "flag" + a country name. They're indistinguishable in language-space.
