@@ -16,8 +16,8 @@ URL: `https://<owner>.github.io/flag2vec/` (resolves once Pages is enabled).
 
 ```
 docs/
-  index.html              hero + canvas + side panels + tour
-  css/style.css           dark, layered glass aesthetic
+  index.html              title page + specimen strip + atlas plate + findings + method
+  css/style.css           printed-atlas substrate: paper page, dark inset plate
   js/app.js               three.js scene, raycasting, filter logic
   data/flags.json         the 423-flag dataset (~293 KB)
   flags/<id>.png          per-flag thumbnails (256×170, ~4.4 MB total)
@@ -45,6 +45,22 @@ The script:
 5. Extracts a 4-color median-cut palette per flag, classifies into 12 named
    families.
 6. Writes the JSON and copies/resizes PNG thumbnails.
+
+## Design
+
+The page is set as a printed atlas. The paper substrate (`--paper` / `--ink`,
+Fraunces display + Source Serif 4 body + IBM Plex Mono furniture) carries the
+type; the interactive scene is a *plate* inset into it — a dark rectangle with a
+hairline frame, a plate number, and a caption, the way a figure sits in a book.
+
+House rules, if you extend it: no gradients, no glassmorphism, no glow, no pill
+buttons, nothing rounder than 2px. Emphasis comes from size, weight, and space.
+
+The categorical inks (tradition / region / kind / palette) are declared twice —
+once as CSS custom properties in `css/style.css` for the chips and legend, once
+as JS objects at the top of `js/app.js` for the three.js instance colors. **Keep
+the two in sync**; there is no shared source. Separation across the fifteen
+tradition colors comes from hue *and* value, not from saturating every hue.
 
 ## License
 

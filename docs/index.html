@@ -3,14 +3,17 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
-<title>flag2vec · the latent geometry of 423 flags</title>
-<meta name="description" content="DINOv2 sees national flags through a visual eye. This site is its atlas — 423 flags placed in 3D by their learned embeddings. Nordic crosses cluster. Communist red doesn't. Mars inherits." />
-<meta property="og:title" content="flag2vec · the latent geometry of 423 flags" />
-<meta property="og:description" content="A 3D walk through DINOv2's embedding of 197 sovereign flags + 201 subdivisions + 25 Martian flags. Filter by tradition, region, palette, era." />
+<title>flag2vec — the latent geometry of 423 flags</title>
+<meta name="description" content="DINOv2 has never been told what a flag is. Given only pixels it puts Nordic crosses beside each other, keeps British ensigns together across an ocean, and scatters communist red. An interactive atlas of 423 flags in learned embedding space." />
+<meta property="og:title" content="flag2vec — the latent geometry of 423 flags" />
+<meta property="og:description" content="An interactive atlas of 197 sovereign flags, 201 subdivisions, and 25 Martian flags placed by DINOv2 embeddings. Filter by tradition, region, palette." />
 <meta property="og:type" content="website" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet" />
 <link rel="preconnect" href="https://unpkg.com" />
 <link rel="stylesheet" href="css/style.css" />
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cdefs%3E%3ClinearGradient id='g' x1='0' x2='1'%3E%3Cstop offset='0' stop-color='%23ff6a3d'/%3E%3Cstop offset='1' stop-color='%23ffd166'/%3E%3C/linearGradient%3E%3C/defs%3E%3Crect width='64' height='64' rx='14' fill='%23121417'/%3E%3Ccircle cx='32' cy='32' r='18' fill='url(%23g)' /%3E%3Ccircle cx='32' cy='32' r='6' fill='%23121417'/%3E%3C/svg%3E" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23f7f5f0'/%3E%3Crect x='10' y='16' width='44' height='32' fill='none' stroke='%231a1a1e' stroke-width='3'/%3E%3Ccircle cx='24' cy='30' r='4' fill='%23b4462f'/%3E%3Ccircle cx='40' cy='38' r='4' fill='%231a1a1e'/%3E%3C/svg%3E" />
 <script type="importmap">
 {
   "imports": {
@@ -22,35 +25,65 @@
 </head>
 <body>
 
-<!-- ─── Hero ────────────────────────────────────────────────────────────── -->
-<section class="hero">
-  <div class="hero-text">
-    <h1><span class="brand">flag2vec</span><span class="dot">·</span> <span class="sub">the latent geometry of <em id="hero-count">423</em> flags</span></h1>
-    <p class="kicker">
-      DINOv2 — a self-supervised vision model that has never been told what a
-      flag <em>is</em> — sees Nordic crosses as visual twins, British ensigns as
-      siblings, and pan-Slavic tricolours as strangers. This is the atlas it
-      drew. Drag to rotate.
-    </p>
-    <div class="hero-actions">
-      <a class="cta" href="#viz">Enter the atlas →</a>
-      <a class="link" href="https://github.com/Rome-1/flag2vec" target="_blank" rel="noopener">View the code</a>
-    </div>
-  </div>
-  <div class="hero-marquee" aria-hidden="true"><div id="hero-strip"></div></div>
+<!-- ─── Masthead ────────────────────────────────────────────────────────── -->
+<header class="mast">
+  <a class="mast__brand" href="#top">flag2vec</a>
+  <span class="mast__spec">DINOv2 ViT-S/14 · 384-d · 423 flags</span>
+  <nav class="mast__nav" aria-label="Sections">
+    <a href="#viz">Atlas</a>
+    <a href="#findings">Findings</a>
+    <a href="#method">Method</a>
+    <a href="https://github.com/Rome-1/flag2vec" target="_blank" rel="noopener">Repo <span class="ext">↗</span></a>
+  </nav>
+</header>
+
+<!-- ─── Title page ──────────────────────────────────────────────────────── -->
+<section class="title" id="top">
+  <p class="title__over">An atlas of learned visual similarity</p>
+  <h1 class="title__h">The latent geometry<br />of <em id="hero-count">423</em> flags</h1>
+  <p class="title__dek">
+    DINOv2 has never been told what a flag <em>is</em>. Given nothing but pixels,
+    it sets the Nordic crosses side by side, keeps the British ensigns together
+    across an ocean, and scatters communist red to the far corners of its space.
+    This is the map it drew — and you can walk around inside it.
+  </p>
+
+  <dl class="colophon">
+    <div><dt>Model</dt><dd>DINOv2 ViT-S/14, self-supervised, frozen</dd></div>
+    <div><dt>Space</dt><dd>384 dimensions, Procrustes-joined</dd></div>
+    <div><dt>Corpus</dt><dd>197 sovereign · 201 subdivision · 25 Martian</dd></div>
+    <div><dt>Projections</dt><dd>PCA · t-SNE · UMAP, all in 3D</dd></div>
+  </dl>
 </section>
 
-<!-- ─── Visualization stage ─────────────────────────────────────────────── -->
-<section id="viz" class="stage">
+<!-- ─── Plate I · the corpus ────────────────────────────────────────────── -->
+<figure class="specimen">
+  <div class="specimen__strip" aria-hidden="true"><div id="hero-strip"></div></div>
+  <figcaption>
+    <span class="plate-no">Plate I</span>
+    <span class="cap-text">The corpus, one flag per vexillological tradition.
+    Every flag is rasterized at 518&nbsp;px and pushed through the encoder
+    exactly once.</span>
+  </figcaption>
+</figure>
+
+<!-- ─── Plate II · the atlas ────────────────────────────────────────────── -->
+<section id="viz" class="plate">
+  <div class="plate__rule">
+    <span class="plate-no">Plate II</span>
+    <span class="plate__hint">drag to rotate · scroll to zoom · click a flag</span>
+  </div>
+
   <div id="canvas-wrap">
     <canvas id="scene"></canvas>
 
     <!-- toolbar (top, floating) -->
     <div class="toolbar">
       <div class="seg" data-control="projection">
-        <button data-value="tsne3"  class="seg-btn active">t-SNE 3D</button>
-        <button data-value="umap3"  class="seg-btn">UMAP 3D</button>
-        <button data-value="pca3"   class="seg-btn">PCA 3D</button>
+        <span class="seg-label">projection</span>
+        <button data-value="tsne3"  class="seg-btn active">t-SNE</button>
+        <button data-value="umap3"  class="seg-btn">UMAP</button>
+        <button data-value="pca3"   class="seg-btn">PCA</button>
       </div>
       <div class="seg" data-control="color">
         <span class="seg-label">color by</span>
@@ -59,10 +92,12 @@
         <button data-value="kind"         class="seg-btn">kind</button>
         <button data-value="palette"      class="seg-btn">palette</button>
       </div>
-      <button id="reset-view" class="ghost" title="restore defaults (sovereign flags, home camera)">⟲ reset</button>
-      <button id="fullscreen" class="ghost" title="toggle fullscreen" aria-label="toggle fullscreen">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
-      </button>
+      <div class="toolbar__end">
+        <button id="reset-view" class="ghost" title="restore defaults (sovereign flags, home camera)">reset</button>
+        <button id="fullscreen" class="ghost ghost--icon" title="toggle fullscreen" aria-label="toggle fullscreen">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9V4h5"/><path d="M20 9V4h-5"/><path d="M4 15v5h5"/><path d="M20 15v5h-5"/></svg>
+        </button>
+      </div>
     </div>
 
     <!-- filter panel (left, collapsible) -->
@@ -129,77 +164,135 @@
       <div class="boot-text">loading 423 flags…</div>
     </div>
   </div>
+
+  <figcaption class="plate__cap">
+    423 flags positioned by their DINOv2 embeddings, projected to three
+    dimensions. Distance is visual similarity as the encoder measures it —
+    nobody labelled a single one.
+  </figcaption>
 </section>
 
-<!-- ─── Story tour ───────────────────────────────────────────────────────── -->
-<section class="tour">
-  <h2>five things DINOv2 saw</h2>
-  <div class="tour-grid">
+<!-- ─── Findings ────────────────────────────────────────────────────────── -->
+<section class="findings" id="findings">
+  <h2 class="findings__h">Five things the encoder saw</h2>
 
-    <article class="tour-card" data-tour="nordic">
-      <div class="ord">01</div>
-      <h3>Nordic crosses are visual twins.</h3>
-      <p>Sweden, Denmark, Norway, Iceland, and Finland sit in the tightest
-      cluster of any tradition — 64% k=5 NN purity in 384-dim space. The
-      structure is the message: a single asymmetric cross, even when the colors
-      vary.</p>
-      <button class="tour-btn">show me →</button>
+  <ol class="finds">
+
+    <article class="find tour-card" data-tour="nordic">
+      <span class="find__no">01</span>
+      <div class="find__body">
+        <h3>Nordic crosses are visual twins.</h3>
+        <p>Sweden, Denmark, Norway, Iceland and Finland sit in the tightest
+        cluster of any tradition — <b>64% k=5 nearest-neighbour purity</b> in
+        384 dimensions. The structure carries the signal, not the colour: a
+        single off-centre cross survives every palette it is painted in.</p>
+      </div>
+      <button class="tour-btn">Show me</button>
     </article>
 
-    <article class="tour-card" data-tour="british">
-      <div class="ord">02</div>
-      <h3>British ensigns crossed an ocean and stayed siblings.</h3>
-      <p>The UK, Australia, New Zealand, Fiji, and Tuvalu share a canton-on-blue
-      template — and despite very different fly designs, DINOv2 places them
-      together. Australian state flags pile in too (31× k-NN lift).</p>
-      <button class="tour-btn">show me →</button>
+    <article class="find tour-card" data-tour="british">
+      <span class="find__no">02</span>
+      <div class="find__body">
+        <h3>British ensigns crossed an ocean and stayed siblings.</h3>
+        <p>The UK, Australia, New Zealand, Fiji and Tuvalu share a
+        canton-on-blue template, and despite wildly different fly designs the
+        encoder files them together. Australian state flags pile in on top of
+        them — a <b>31× k-NN lift</b> over chance.</p>
+      </div>
+      <button class="tour-btn">Show me</button>
     </article>
 
-    <article class="tour-card" data-tour="latin">
-      <div class="ord">03</div>
-      <h3>Latin America beats geography.</h3>
-      <p>Region matters less than tradition: European flags are scattered
-      everywhere, but Latin American horizontal-tricolour-with-charge forms a
-      tight visual subcluster spanning two continents. Argentina, Uruguay,
-      Honduras, El Salvador — visual cousins, political coincidence.</p>
-      <button class="tour-btn">show me →</button>
+    <article class="find tour-card" data-tour="latin">
+      <span class="find__no">03</span>
+      <div class="find__body">
+        <h3>Tradition beats geography.</h3>
+        <p>Europe scatters across the whole map. Latin America does not: the
+        horizontal tricolour with a central charge forms one tight subcluster
+        spanning two continents. Argentina, Uruguay, Honduras, El Salvador —
+        visual cousins, political coincidence.</p>
+      </div>
+      <button class="tour-btn">Show me</button>
     </article>
 
-    <article class="tour-card" data-tour="communist">
-      <div class="ord">04</div>
-      <h3>Communist red doesn't cluster.</h3>
-      <p>China, Vietnam, North Korea, Belarus, Mongolia, Angola — share a
-      colour, not a structure. DINOv2 sees beyond palette to layout, so a red
-      field with a star, a hammer-and-compass, an ornate seal, and a black
-      stripe scatter across the map.</p>
-      <button class="tour-btn">show me →</button>
+    <article class="find tour-card" data-tour="communist">
+      <span class="find__no">04</span>
+      <div class="find__body">
+        <h3>Communist red doesn't cluster.</h3>
+        <p>China, Vietnam, North Korea, Belarus, Mongolia, Angola — a shared
+        colour, not a shared structure. Because the encoder reads layout over
+        palette, a red field with a star, a hammer-and-compass, an ornate seal
+        and a black stripe end up nowhere near each other.</p>
+      </div>
+      <button class="tour-btn">Show me</button>
     </article>
 
-    <article class="tour-card" data-tour="mars">
-      <div class="ord">05</div>
-      <h3>Mars inherits — sometimes.</h3>
-      <p>Twenty-five Martian regional flags, each procedurally derived from an
-      Earth tradition. 13 of 25 land closest to their inherited centroid in
-      DINOv2 space. Structurally distinctive traditions (Nordic, solid+emblem,
-      pan-Arab) inherit cleanly; color-only traditions (heraldic, pan-African)
-      scatter.</p>
-      <button class="tour-btn">show me →</button>
+    <article class="find tour-card" data-tour="mars">
+      <span class="find__no">05</span>
+      <div class="find__body">
+        <h3>Mars inherits — sometimes.</h3>
+        <p>Twenty-five Martian regional flags, each procedurally derived from an
+        Earth tradition. <b>13 of 25</b> land closest to the centroid they
+        inherited from. Structurally distinctive parents (Nordic, solid+emblem,
+        pan-Arab) pass the resemblance down; colour-only parents (heraldic,
+        pan-African) do not.</p>
+      </div>
+      <button class="tour-btn">Show me</button>
     </article>
 
-  </div>
+  </ol>
+</section>
+
+<!-- ─── Method ──────────────────────────────────────────────────────────── -->
+<section class="method" id="method">
+  <h2 class="method__h">How the map was made</h2>
+
+  <table class="spec">
+    <tbody>
+      <tr>
+        <th scope="row">Encoder</th>
+        <td>DINOv2 ViT-S/14, frozen. Self-supervised on natural images; never
+        fine-tuned, never shown a label.</td>
+      </tr>
+      <tr>
+        <th scope="row">Corpus</th>
+        <td>423 flags — 197 sovereign, 201 subdivision, 25 Martian. SVGs
+        rasterized before encoding.</td>
+      </tr>
+      <tr>
+        <th scope="row">Alignment</th>
+        <td>Two encoder runs (398 flags at 518&nbsp;px, 197 at 224&nbsp;px) joined
+        into one 384-d frame by orthogonal Procrustes on the 197 shared
+        sovereigns.</td>
+      </tr>
+      <tr>
+        <th scope="row">Projection</th>
+        <td>3D PCA · 3D t-SNE (perplexity 20, cosine) · 3D UMAP
+        (<span class="mono">n=15</span>, <span class="mono">min_dist=0.05</span>).</td>
+      </tr>
+      <tr>
+        <th scope="row">Palette</th>
+        <td>Four-colour median cut per flag, classified into twelve named
+        families. Used for the palette colouring, never for the embedding.</td>
+      </tr>
+      <tr>
+        <th scope="row">Lineage</th>
+        <td>A visual analogue of Figure&nbsp;3 in
+        <a href="https://arxiv.org/abs/1609.08359" target="_blank" rel="noopener">emoji2vec</a>.
+        Sister project: <a href="https://rome-1.github.io/music2vec/" target="_blank" rel="noopener">music2vec</a>.</td>
+      </tr>
+    </tbody>
+  </table>
 </section>
 
 <!-- ─── Footer ──────────────────────────────────────────────────────────── -->
 <footer class="page-foot">
-  <div>
-    <strong>flag2vec</strong> · DINOv2 ViT-S/14 · 423 flags
-    · joint Procrustes-aligned 384-dim space · 3D PCA · t-SNE · UMAP
-  </div>
-  <div>
-    <a href="https://github.com/Rome-1/flag2vec" target="_blank" rel="noopener">repo</a>
-    · <a href="https://github.com/Rome-1/flag2vec#readme" target="_blank" rel="noopener">paper-style writeup</a>
-    · MIT
-  </div>
+  <span><b>flag2vec</b> — Rome Thorstenson</span>
+  <span class="page-foot__links">
+    <a href="https://github.com/Rome-1/flag2vec" target="_blank" rel="noopener">Source</a>
+    <a href="https://github.com/Rome-1/flag2vec#readme" target="_blank" rel="noopener">Writeup</a>
+    <a href="https://github.com/hampusborgos/country-flags" target="_blank" rel="noopener">Flag SVGs</a>
+    <span class="lic">MIT</span>
+  </span>
 </footer>
 
 <script type="module" src="js/app.js"></script>

@@ -39,31 +39,31 @@ const searchInp   = $("#search");
 
 // ─── Color tokens (mirror style.css) ──────────────────────────────────────
 const PALETTE_COLORS = {
-  red:"#e53e3e", white:"#f5f5f5", black:"#222", green:"#2bb673",
-  blue:"#4d6bff", yellow:"#ffd166", orange:"#ff8a3d", purple:"#a05cff",
-  brown:"#8b5a3c", rust:"#c84a2f", sage:"#9ab388", cyan:"#6dd5ed",
+  red:"#c0392b", white:"#efede7", black:"#24222a", green:"#2e7d5b",
+  blue:"#2a5da8", yellow:"#d9ae2b", orange:"#e0803f", purple:"#7a4fa3",
+  brown:"#8a5f42", rust:"#b4462f", sage:"#8fa98a", cyan:"#4fa3b8",
 };
 const TRADITION_COLORS = {
-  nordic_cross:"#6dd5ed", british_ensign:"#4d6bff", pan_arab:"#2bb673",
-  pan_african:"#e7b417", pan_slavic:"#a05cff", communist_red:"#e53e3e",
-  latin_charge:"#ff6a3d", stars_stripes:"#5089ff", horizontal_tricolor:"#5cd6c0",
-  vertical_tricolor:"#f08aa8", star_crescent:"#14b8a6", solid_emblem:"#c44569",
-  heraldic:"#c89178", saltire:"#7aa6ff", unique:"#8892a6",
-  japanese_geometric:"#f08aa8",  // observed in data but uncommon
+  nordic_cross:"#1f6fb2", british_ensign:"#23356b", pan_arab:"#2e7d5b",
+  pan_african:"#c9a227", pan_slavic:"#7a4fa3", communist_red:"#c0392b",
+  latin_charge:"#e07a3f", stars_stripes:"#5b7fc7", horizontal_tricolor:"#6fa98a",
+  vertical_tricolor:"#b0567f", star_crescent:"#157f73", solid_emblem:"#8c3b4a",
+  heraldic:"#a8785a", saltire:"#7ba7ce", unique:"#8a8a85",
+  japanese_geometric:"#d08aa0", swiss_canton:"#9e2b25", us_state_seal:"#7f6a3c",
 };
 const REGION_COLORS = {
-  Africa:"#f59e0b", Americas:"#ff6a3d", Asia:"#e53e3e",
-  Europe:"#4d6bff", Oceania:"#2bb673",
+  Africa:"#c9a227", Americas:"#e07a3f", Asia:"#c0392b",
+  Europe:"#1f6fb2", Oceania:"#2e7d5b",
 };
 const KIND_COLORS = {
-  sovereign:"#6dd5ed", subdivision:"#c89178",
-  historical:"#ffd166", mars:"#ff5a48",
+  sovereign:"#1f6fb2", subdivision:"#a8785a",
+  historical:"#c9a227", mars:"#b4462f",
 };
-const FALLBACK = "#aaaaaa";
+const FALLBACK = "#8a8a85";
 
 const colorFor = (mode, flag) => {
   if (mode === "vex_category") return TRADITION_COLORS[flag.vex_category] || FALLBACK;
-  if (mode === "region") return flag.kind === "mars" ? "#ff5a48" : (REGION_COLORS[flag.region] || FALLBACK);
+  if (mode === "region") return flag.kind === "mars" ? "#b4462f" : (REGION_COLORS[flag.region] || FALLBACK);
   if (mode === "kind") return KIND_COLORS[flag.kind] || FALLBACK;
   if (mode === "palette") return flag.avg || FALLBACK;
   return FALLBACK;
@@ -180,7 +180,7 @@ function initScene(){
   const w = wrap.clientWidth, h = wrap.clientHeight;
 
   state.scene = new THREE.Scene();
-  state.scene.fog = new THREE.Fog(0x08090d, 18, 60);
+  state.scene.fog = new THREE.Fog(0x14141a, 18, 60);
 
   state.camera = new THREE.PerspectiveCamera(40, w/h, 0.1, 200);
   state.camera.position.set(7, 5, 9);
@@ -191,14 +191,14 @@ function initScene(){
   });
   state.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
   state.renderer.setSize(w, h, false);
-  state.renderer.setClearColor(0x08090d, 1);
+  state.renderer.setClearColor(0x14141a, 1);
 
   // Soft global ambient — sprites use MeshBasicMaterial-equivalent, no lighting
   // needed, but a hint of background glow helps depth perception.
   state.scene.add(new THREE.AmbientLight(0xffffff, 0.6));
 
   // Subtle floor + grid for depth cue
-  const grid = new THREE.GridHelper(40, 40, 0x1a1d28, 0x12141b);
+  const grid = new THREE.GridHelper(40, 40, 0x2e2e39, 0x1c1c24);
   grid.position.y = -2.6;
   grid.material.opacity = 0.5; grid.material.transparent = true;
   state.scene.add(grid);
@@ -660,7 +660,7 @@ function legendItems(mode){
   }
   if (mode === "region"){
     const r = [...state.data.meta.regions, "Mars"];
-    return r.map(c => [c, REGION_COLORS[c] || (c === "Mars" ? "#ff5a48" : FALLBACK)]);
+    return r.map(c => [c, REGION_COLORS[c] || (c === "Mars" ? "#b4462f" : FALLBACK)]);
   }
   if (mode === "kind"){
     return state.data.meta.kinds.map(c => [c, KIND_COLORS[c] || FALLBACK]);
